@@ -1,0 +1,13 @@
+{% extends '_base.html' %}
+{% block title %}{{ post.title }} | {{ block.super }}{% endblock title %}
+
+{% block content %}
+  <div>
+    <h2 class="inline-block">{{ post.title }}
+      {% if post.author == user %}{% endif %}
+      <span class="inline-block fs-4 ms-1"><a href="{% url "post_edit" post.pk %}">Edit Post</a></span>
+    </h2>
+    <p>{{ post.body}}</p>
+  </div>
+  <p class="mt-4"><a href="{% url 'post_list' %}">Back to All Posts</a></p>
+{% endblock content %}

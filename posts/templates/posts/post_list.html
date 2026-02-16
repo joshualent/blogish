@@ -1,0 +1,13 @@
+{% extends '_base.html' %}
+{% block title %}Posts | {{ block.super }}{% endblock title %}
+
+{% block content %}
+  {% for post in post_list %}
+    {% if post.public %}
+      <div>
+        <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+        <p>{{ post.body}}</p>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endblock content %}
