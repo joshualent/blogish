@@ -24,10 +24,15 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PATH="/app/.venv/bin:$PATH"
 
+# Copy and set up entrypoint script
+COPY entrypoint.sh /app/
+RUN chmod +x /app/entrypoint.sh
+
 # Expose port 8000
 EXPOSE 8000
 
 
+ENTRYPOINT [ "/app/entrypoint.sh" ]
 
 # Use gunicorn on port 8000
 CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "django_project.wsgi"]

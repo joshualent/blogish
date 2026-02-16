@@ -86,6 +86,7 @@ TEMPLATES = [
 ]
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
+DATABASES = {"default": env.dj_db_url("DATABASE_URL")}
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
