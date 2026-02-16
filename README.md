@@ -1,7 +1,8 @@
 # blogish
-:::note
-This is a blog
-:::
+> [!note]
+> This is a blog demo to showcase tools use in web programming and web hacking. It is insecure by design.
+
+
 
 ## 🚀 Features
 - Django 5.1 & Python 3.13
@@ -94,3 +95,6 @@ $ docker compose exec web python manage.py createsuperuser
 - Update the [EMAIL_BACKEND](https://docs.djangoproject.com/en/4.0/topics/email/#module-django.core.mail) and connect with a mail provider.
 - Make the [admin more secure](https://opensource.com/article/18/1/10-tips-making-django-admin-more-secure).
 - `django-allauth` supports [social authentication](https://django-allauth.readthedocs.io/en/latest/socialaccount/index.html) if you need that.
+
+> [!note]
+> This project is based off the [lithium django starting template](https://github.com/wsvincent/lithium) by [wsvincent](https://github.com/wsvincent).
