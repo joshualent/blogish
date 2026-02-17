@@ -1,7 +1,11 @@
+from django.urls import reverse
+from django.shortcuts import render
 from django.views.generic.list import ListView
+from django.views.generic import View, FormView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
-from .models import Post
+from .models import Post, Comment
+from .forms import CommentForm
 
 # Create your views here.
 
@@ -13,24 +17,78 @@ class PostListView(ListView):
     model = Post
 
 
-class PostDetailView(DetailView):
+class PostDetailView(DetailView, FormView):
     """Post List View"""
 
     template_name = "posts/post_detail.html"
     model = Post
+    form_class = CommentForm
+
+    def post(self, request, *args, **kwargs):
+        """Handle POST request"""
+        self.post = self.get_object()
+        return super().post(request, *args, **kwargs)
+
+    def form_valid(self, form):
+        """Complete form information after validation succeeds"""
+        comment = form.save(commit=False)
+        comment.post = self.post
+        comment.author = self.request.user
+        comment.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        """Success redirect URL"""
+        return reverse("post_detail", kwargs={"pk": self.post.pk})
 
 
 class PostCreateView(CreateView):
     """Post Create View"""
 
-    template_name = "posts/post_new.html"
     model = Post
-    fields = ["author", "title", "body", "public"]
+    template_name = "posts/post_new.html"
+    fields = ("title", "body", "public")
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 class PostUpdateView(UpdateView):
     """Post Update View"""
 
-    template_name = "posts/post_edit.html"
     model = Post
-    fields = ["title", "body", "public"]
+    template_name = "posts/post_edit.html"
+    fields = ("title", "body", "public")
+
+
+class PostLikeView(View):
+    """Post Like endpoint for HTMX"""
+
+    def post(self, request, post_pk, *args, **kwargs):
+        post = Post.objects.get(pk=post_pk)
+        if request.user in post.likes.all():
+            post.likes.remove(request.user.id)
+            post.save()
+        else:
+            post.likes.add(request.user.id)
+            post.save()
+
+        return render(request, "posts/partials/_post_like.html", {"post": post})
+
+
+class CommentLikeView(View):
+    """Post Like endpoint for HTMX"""
+
+    def post(self, request, comment_pk, *args, **kwargs):
+        comment = Comment.objects.get(pk=comment_pk)
+        if request.user in comment.likes.all():
+            comment.likes.remove(request.user.id)
+            comment.save()
+        else:
+            comment.likes.add(request.user.id)
+            comment.save()
+
+        return render(
+            request, "posts/partials/_comment_like.html", {"comment": comment}
+        )
