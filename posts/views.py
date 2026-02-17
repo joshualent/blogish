@@ -1,5 +1,6 @@
+from django.http import HttpResponseForbidden
 from django.urls import reverse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic.list import ListView
 from django.views.generic import View, FormView
 from django.views.generic.detail import DetailView
@@ -92,3 +93,28 @@ class CommentLikeView(View):
         return render(
             request, "posts/partials/_comment_like.html", {"comment": comment}
         )
+
+
+class CommentUpdateView(View):
+    def get(self, request, pk, *args, **kwargs):
+        comment = get_object_or_404(Comment, pk=pk)
+        return render(
+            request, "posts/partials/_comment_edit.html", {"comment": comment}
+        )
+
+    def post(self, request, pk, *args, **kwargs):
+        comment = get_object_or_404(Comment, pk=pk)
+        if comment.author != request.user:
+            return HttpResponseForbidden("You are not allowed to edit this comment.")
+        comment.text = request.POST.get("text")
+        comment.save()
+        return render(
+            request,
+            "posts/partials/_comment.html",
+            {"comment": comment},
+        )
+
+
+class CommentDetailView(DetailView):
+    model = Comment
+    template_name = "posts/partials/_comment_edit.html"

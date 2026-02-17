@@ -21,10 +21,7 @@
 
   <h2 class="mt-2 h3">Comments</h2>
   {% for comment in post.comments.all %}
-  
-    <p class="my-0">{{ comment.text }}</p> 
-    <span class="text-muted mb-1">- {{ comment.author}}</span>
-    {% include "posts/partials/_comment_like.html" %}
+    {% include "posts/partials/_comment.html" %} 
   {% endfor %}
   <p class="mt-4"><a href="{% url 'post_list' %}">Back to All Posts</a></p>
 {% endblock content %}
