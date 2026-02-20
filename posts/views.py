@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404
@@ -43,7 +44,7 @@ class PostDetailView(DetailView, FormView):
         return reverse("post_detail", kwargs={"pk": self.post.pk})
 
 
-class PostCreateView(CreateView):
+class PostCreateView(LoginRequiredMixin, CreateView):
     """Post Create View"""
 
     model = Post
@@ -55,7 +56,7 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
 
-class PostUpdateView(UpdateView):
+class PostUpdateView(LoginRequiredMixin, UpdateView):
     """Post Update View"""
 
     model = Post

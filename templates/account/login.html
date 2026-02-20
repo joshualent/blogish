@@ -3,6 +3,7 @@
 {% block title %}Log in{% endblock %}
 {% block content %}
     <h2>Log in</h2>
+    <div class="block my-2">Don't have an account? <a class="fs-6" href="{% url "account_signup" %}">Sign up</a></div>
     <form method="post">
         {% csrf_token %}
         {{ form|crispy }}
