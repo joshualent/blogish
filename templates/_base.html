@@ -46,7 +46,12 @@
                         <li class="nav-item">
                             <a class="nav-link active"
                                aria-current="page"
-                               href="{% if request.user.is_authenticated %}{% url 'post_list' %}{% else %}{% url 'home' %}{% endif %}">Home</a>
+                               href="{% url 'home' %}">Homepage</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active"
+                               aria-current="page"
+                               href="{% url 'post_list' %}">Posts</a>
                         </li>
                         {% comment %} <li class="nav-item">
               <a class="nav-link" href="{% url 'about' %}">About</a>
